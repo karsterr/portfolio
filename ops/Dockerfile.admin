@@ -1,0 +1,25 @@
+FROM node:24.22.3-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54 AS build
+WORKDIR /app
+ENV ASTRO_TELEMETRY_DISABLED=1
+COPY package.json package-lock.json .npmrc .node-version ./
+RUN npm ci --no-audit --no-fund
+COPY astro.admin.config.mjs keystatic.config.ts tsconfig.json tsconfig.admin.json ./
+COPY src/admin ./src/admin
+COPY src/shared ./src/shared
+COPY scripts ./scripts
+ARG PUBLIC_CONTENT_REPO
+ARG PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
+ENV PUBLIC_CONTENT_REPO=$PUBLIC_CONTENT_REPO
+ENV PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=$PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
+RUN npm run build:admin && npm prune --omit=dev --ignore-scripts --no-audit --no-fund
+
+FROM node:24.22.3-bookworm-slim@sha256:dc26ae92c9fb15cf6b1d63e20f0944b2efe0f115b20e00be48fb23fceb061c54
+WORKDIR /app
+ENV NODE_ENV=production HOST=0.0.0.0 PORT=4322
+COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/dist/admin ./dist/admin
+COPY --chown=node:node package.json .node-version ./
+COPY --chown=node:node scripts/start-admin.ts scripts/env.ts scripts/runtime.mjs ./scripts/
+USER node
+EXPOSE 4322
+CMD ["node", "scripts/start-admin.ts"]

@@ -1,0 +1,16 @@
+---
+import { entryPath, type DocumentData, type Kind } from '../../shared/content';
+import { text } from '../lib/site';
+interface Props { data: DocumentData; kind: Kind; index?: number; }
+const { data, kind, index = 0 } = Astro.props;
+---
+<article class="card" data-reveal>
+  <div class="flex items-center justify-between gap-4 font-mono text-xs text-muted">
+    <span>{String(index + 1).padStart(2, '0')} / {data.origin === 'babintech' ? 'BABINTECH' : kind.toUpperCase()}</span>
+    {data.publishedAt && <time datetime={data.publishedAt}>{data.publishedAt}</time>}
+  </div>
+  <h3><a href={entryPath(data, kind)}>{data.title}</a></h3>
+  <p>{data.summary}</p>
+  <div class="mt-6 flex flex-wrap gap-2">{data.technologies.map((technology) => <span class="tag">{technology}</span>)}</div>
+  <a href={entryPath(data, kind)} class="mt-auto pt-8 text-sm font-semibold text-accent" aria-label={`${text[data.locale].read}: ${data.title}`}>{text[data.locale].read} <span aria-hidden="true">↗</span></a>
+</article>

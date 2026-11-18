@@ -1,0 +1,21 @@
+---
+const lines = Array.from({ length: 18 }, (_, index) => {
+  const y = 130 + index * 25;
+  return `M -150 ${y} C 250 ${y - 200}, 360 ${y + 310}, 760 ${y + 80} S 1270 ${y - 260}, 1650 ${y + 40}`;
+});
+---
+<div class="ambient" aria-hidden="true" transition:persist="ambient-background">
+  <div class="ambient-glow"></div>
+  <svg class="ambient-waves" viewBox="0 0 1500 1000" fill="none" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="wave-stroke" x1="0" y1="0" x2="1400" y2="850" gradientUnits="userSpaceOnUse">
+        <stop stop-color="currentColor" stop-opacity="0" />
+        <stop offset="0.35" stop-color="currentColor" stop-opacity="0.6" />
+        <stop offset="0.65" stop-color="currentColor" stop-opacity="0.9" />
+        <stop offset="1" stop-color="currentColor" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+    <g class="wave-field wave-field-one" stroke="url(#wave-stroke)" stroke-width="0.7">{lines.map((d) => <path d={d} />)}</g>
+    <g class="wave-field wave-field-two" stroke="url(#wave-stroke)" stroke-width="0.5">{lines.filter((_, i) => i % 2 === 0).map((d) => <path d={d} />)}</g>
+  </svg>
+</div>

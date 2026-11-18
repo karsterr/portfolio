@@ -1,0 +1,36 @@
+---
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "publishedAt": "2026-11-16",
+  "origin": "personal",
+  "publicationApproved": false,
+  "locale": "en",
+  "id": "local-workflow-en",
+  "slug": "local-content-workflow",
+  "translationGroupId": "local-workflow",
+  "title": "A local content editing workflow",
+  "summary": "Edit in the admin, validate the content, and inspect the static output.",
+  "technologies": [
+    "Keystatic",
+    "Astro"
+  ]
+}
+---
+## 1. Open the admin
+
+Follow the local setup instructions in the README and select a collection.
+
+## 2. Edit the content
+
+Create a separate entry for each language. Use the same translation group and different permanent identifiers. Set a publication date before publishing.
+
+## 3. Build
+
+```sh
+npm run build
+npm run preview
+```
+
+This guide is sample content for trying the initial setup.
+

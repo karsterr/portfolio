@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Card from '../../../components/Card.astro';
+import ExperienceTimeline from '../../../components/ExperienceTimeline.astro';
+import ProfileDetails from '../../../components/ProfileDetails.astro';
+import { text } from '../../../lib/site';
+import { locales, kinds, sections, type Locale, type Kind } from '../../../../shared/content';
+export const getStaticPaths = () => locales.flatMap((locale) => kinds.map((kind) => ({ params: { locale, section: sections[locale][kind] }, props: { kind } })));
+interface Props { kind: Kind; }
+const { kind } = Astro.props;
+const locale = Astro.params.locale as Locale;
+const t = text[locale];
+const entries = (await getCollection(kind)).filter((entry) => entry.data.locale === locale).sort((a,b) => (kind === 'experience' ? (a.data.sortOrder ?? 999) - (b.data.sortOrder ?? 999) : 0) || (b.data.publishedAt || '').localeCompare(a.data.publishedAt || ''));
+const other = locale === 'tr' ? 'en' : 'tr';
+---
+<Base locale={locale} title={t[kind]} description={t.sectionInfo[kind]} alternate={`/${other}/${sections[other][kind]}/`}>
+  <header class="py-16 md:py-24" data-reveal><p class="eyebrow">{t.label}</p><h1 class="display mt-5">{t[kind]}</h1><p class="mt-7 max-w-xl text-lg leading-8 text-muted">{t.sectionInfo[kind]}</p></header>
+  {kind === 'experience' ? <ExperienceTimeline entries={entries} /> : <div class="grid gap-5 md:grid-cols-2">{entries.map((entry, index) => <Card data={entry.data} kind={kind} index={index} />)}</div>}
+  {!entries.length && <p class="border-t border-line py-10 text-muted">{t.empty}</p>}
+  {kind === 'experience' && <section class="home-section" aria-labelledby="background-title"><h2 id="background-title" class="section-title">{t.background}</h2><ProfileDetails locale={locale} /></section>}
+</Base>

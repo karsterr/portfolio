@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "name": "Efe Can Kara",
+  "title": {
+    "tr": "AI/ML ve Sistem Mühendisi",
+    "en": "AI/ML & Systems Engineer"
+  },
+  "intro": {
+    "tr": "Makine öğrenmesi, sistem tasarımı ve yazılım mühendisliği üzerine projeler, teknik notlar ve uygulamalı rehberler.",
+    "en": "Projects, technical notes, and practical guides on machine learning, systems design, and software engineering."
+  },
+  "about": {
+    "tr": "AI/ML ve sistem mühendisliği alanında çalışıyorum. Bu portföyde kişisel projelerimi, seçilmiş profesyonel çalışmalarımı ve öğrendiklerimi paylaşıyorum.",
+    "en": "I work in AI/ML and systems engineering. This portfolio brings together my personal projects, selected professional work, and the things I learn."
+  },
+  "featuredProjectIds": [
+    "portfolio-tr",
+    "portfolio-en"
+  ],
+  "links": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/karsterr"
+    }
+  ]
+}

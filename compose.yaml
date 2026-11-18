@@ -1,0 +1,71 @@
+name: portfolio
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ops/Dockerfile.web
+    ports:
+      - "${WEB_BIND_IP:-127.0.0.1}:${WEB_HTTP_PORT:-8080}:8080"
+      - "${WEB_BIND_IP:-127.0.0.1}:${WEB_HTTPS_PORT:-8443}:8443"
+    environment:
+      SITE_ADDRESS: "${SITE_ADDRESS:-:8080}"
+    volumes:
+      - type: bind
+        source: ${PUBLIC_DIR:-./dist/public}
+        target: /srv
+        read_only: true
+        bind:
+          create_host_path: false
+      - caddy_data:/data
+      - caddy_config:/config
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 100
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, wget, -q, --spider, http://127.0.0.1:9090/healthz]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    networks: [public]
+    logging:
+      driver: local
+      options: { max-size: 10m, max-file: "3" }
+
+  admin:
+    profiles: [admin]
+    build:
+      context: .
+      dockerfile: ops/Dockerfile.admin
+      args:
+        PUBLIC_CONTENT_REPO: "${PUBLIC_CONTENT_REPO:-}"
+        PUBLIC_KEYSTATIC_GITHUB_APP_SLUG: "${PUBLIC_KEYSTATIC_GITHUB_APP_SLUG:-}"
+    ports: ["127.0.0.1:4322:4322"]
+    environment:
+      KEYSTATIC_GITHUB_CLIENT_ID: "${KEYSTATIC_GITHUB_CLIENT_ID:-}"
+      KEYSTATIC_GITHUB_CLIENT_SECRET: "${KEYSTATIC_GITHUB_CLIENT_SECRET:-}"
+      KEYSTATIC_SECRET: "${KEYSTATIC_SECRET:-}"
+    read_only: true
+    tmpfs: [/tmp:size=32m,mode=1777]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    cpus: 1.0
+    pids_limit: 100
+    restart: "no"
+    networks: [admin]
+    logging:
+      driver: local
+      options: { max-size: 10m, max-file: "3" }
+
+networks:
+  public:
+  admin:
+volumes:
+  caddy_data:
+  caddy_config:

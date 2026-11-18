@@ -1,0 +1,58 @@
+{
+  "name": "efe-can-kara-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.22.3 <25",
+    "npm": ">=10"
+  },
+  "packageManager": "npm@10.9.8",
+  "scripts": {
+    "runtime:version": "node scripts/runtime.mjs --version",
+    "setup:example": "node scripts/runtime.mjs scripts/seed-content.ts",
+    "prepare:content": "node scripts/runtime.mjs scripts/prepare-content.ts",
+    "dev": "node scripts/runtime.mjs scripts/prepare-content.ts && node scripts/runtime.mjs scripts/astro.ts dev --config astro.config.mjs --ignore-lock",
+    "dev:admin": "node scripts/runtime.mjs scripts/astro.ts dev --config astro.admin.config.mjs --ignore-lock",
+    "build": "node scripts/runtime.mjs scripts/prepare-content.ts && node scripts/runtime.mjs scripts/astro.ts build --config astro.config.mjs && node scripts/runtime.mjs scripts/check-public.ts",
+    "build:admin": "node scripts/runtime.mjs scripts/astro.ts build --config astro.admin.config.mjs",
+    "preview": "node scripts/runtime.mjs scripts/astro.ts preview --config astro.config.mjs --host 127.0.0.1",
+    "start:admin": "node scripts/runtime.mjs scripts/start-admin.ts",
+    "check": "node scripts/runtime.mjs scripts/prepare-content.ts && node scripts/runtime.mjs scripts/astro.ts check --config astro.config.mjs && node scripts/runtime.mjs scripts/astro.ts check --config astro.admin.config.mjs --tsconfig tsconfig.admin.json",
+    "test": "node scripts/runtime.mjs --test tests/*.test.ts",
+    "test:browser": "node scripts/runtime.mjs node_modules/@playwright/test/cli.js test",
+    "archive": "node scripts/runtime.mjs scripts/archive.ts",
+    "verify": "npm run test && npm run check && npm run build && npm run build:admin && node scripts/runtime.mjs scripts/smoke-admin.ts"
+  },
+  "overrides": {
+    "@keystatic/core": {
+      "minimatch": "11.0.1"
+    }
+  },
+  "dependencies": {
+    "@astrojs/markdoc": "2.1.5",
+    "@astrojs/node": "11.1.13",
+    "@astrojs/react": "7.1.9",
+    "@keystatic/astro": "6.0.0",
+    "@keystatic/core": "0.6.9",
+    "@markdoc/markdoc": "0.5.13",
+    "@tailwindcss/vite": "4.3.5",
+    "astro": "7.4.12",
+    "lenis": "1.3.27",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "sharp": "0.35.5",
+    "tailwindcss": "4.3.5",
+    "yaml": "2.9.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.12",
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.65.1",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "6.0.3"
+  }
+}

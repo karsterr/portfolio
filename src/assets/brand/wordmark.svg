@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 356 136" fill="none">
+  <path d="M0 0h46v18H20v100h26v18H0Z" fill="var(--brand-left, #285c70)"/>
+  <path d="M310 0h46v136h-46v-18h26V18h-26Z" fill="var(--brand-right, #608b98)"/>
+  <path fill-rule="evenodd" d="M79 34h42l15 15v39H80v12h56v17H78l-17-17V51Zm1 18v20h37V52Z" fill="var(--brand-ink, #e2d9da)"/>
+  <path d="M170 34h43l16 16v16h-19V53h-34v47h34V87h19v14l-16 16h-43l-17-17V51Z" fill="var(--brand-ink, #e2d9da)"/>
+  <path d="M244 12h20v56l25-34h24l-32 40 32 43h-25l-24-34v34h-20Z" fill="var(--brand-ink, #e2d9da)"/>
+</svg>

@@ -1,0 +1,12 @@
+.git
+.env
+.env.*
+node_modules
+.local
+.generated
+.cache
+.astro
+dist
+test-results
+playwright-report
+design/references

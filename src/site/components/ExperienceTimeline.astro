@@ -1,0 +1,17 @@
+---
+import { entryPath, type DocumentData } from '../../shared/content';
+import { text } from '../lib/site';
+interface Props { entries: { data: DocumentData }[]; }
+const { entries } = Astro.props;
+---
+<ol class="experience-timeline" role="list">
+  {entries.map(({ data }) => <li class="experience-entry" data-reveal>
+    <div class="experience-period"><span class="timeline-marker" aria-hidden="true"></span><p class="font-mono text-xs leading-6 text-muted">{data.period}</p><p class="mt-3 text-sm font-semibold text-accent">{data.organization}</p></div>
+    <div>
+      <h2 class="text-xl font-semibold leading-8 tracking-tight md:text-2xl"><a href={entryPath(data, 'experience')}>{data.title}</a></h2>
+      <p class="mt-4 max-w-2xl leading-8 text-muted">{data.summary}</p>
+      <ul class="mt-5 flex flex-wrap gap-2" role="list">{data.technologies.map((technology) => <li class="tag">{technology}</li>)}</ul>
+      <a class="mt-5 inline-block text-sm font-semibold text-accent" href={entryPath(data, 'experience')} aria-label={`${text[data.locale].read}: ${data.title}`}>{text[data.locale].read} <span aria-hidden="true">↗</span></a>
+    </div>
+  </li>)}
+</ol>

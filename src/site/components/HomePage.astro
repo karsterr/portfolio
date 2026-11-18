@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Card from './Card.astro';
+import About from './About.astro';
+import Contact from './Contact.astro';
+import { settings, text } from '../lib/site';
+import { sections, type Locale } from '../../shared/content';
+interface Props { locale: Locale; canonicalPath?: string; }
+const { locale, canonicalPath } = Astro.props;
+const t = text[locale];
+const projects = (await getCollection('projects')).filter((entry) => entry.data.locale === locale);
+const featured = settings.featuredProjectIds.flatMap((id) => projects.filter((entry) => entry.data.id === id));
+const selected = featured.length ? featured : projects.slice(0, 3);
+const posts = (await getCollection('posts')).filter((entry) => entry.data.locale === locale).sort((a,b) => (b.data.publishedAt || '').localeCompare(a.data.publishedAt || '')).slice(0, 2);
+---
+<Base locale={locale} canonicalPath={canonicalPath} title={t.home} alternate={`/${locale === 'tr' ? 'en' : 'tr'}/`}>
+  <section class="hero grid gap-12 border-b border-line py-16 md:grid-cols-[1fr_240px] md:py-24">
+    <div data-reveal>
+      <p class="eyebrow">{t.label}</p>
+      <h1 class="display mt-6 max-w-3xl">{t.hero}</h1>
+      <p class="mt-8 max-w-2xl text-lg leading-8 text-muted">{settings.intro[locale]}</p>
+      {settings.profile?.freelanceAvailable && <p class="availability mt-6"><span aria-hidden="true"></span><a href="#contact" data-astro-reload>{t.available}</a></p>}
+      <a href={`/${locale}/${sections[locale].projects}/`} class="button-primary mt-9">{t.selected}<span aria-hidden="true">↗</span></a>
+      <div class="mt-9"><a href="#work" data-astro-reload class="scroll-cue"><svg viewBox="0 0 16 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M8 2v18m-5-5 5 5 5-5" /></svg>{t.scrollDown}</a></div>
+    </div>
+    <aside aria-label={t.focusAreas} class="hero-aside self-end font-mono text-xs leading-7 text-muted" data-reveal>
+      <svg class="hero-orbit" viewBox="0 0 240 240" fill="none" aria-hidden="true">
+        <circle cx="120" cy="120" r="107" stroke="currentColor" stroke-opacity="0.16" stroke-dasharray="2 8" />
+        <g class="orbit-lines" stroke="currentColor" stroke-width="0.8" stroke-opacity="0.45">
+          <ellipse cx="120" cy="120" rx="80" ry="37" transform="rotate(-32 120 120)" />
+          <ellipse cx="120" cy="120" rx="80" ry="37" transform="rotate(32 120 120)" />
+          <ellipse cx="120" cy="120" rx="80" ry="37" transform="rotate(90 120 120)" />
+        </g>
+        <circle cx="120" cy="120" r="7" fill="currentColor" />
+        <circle cx="120" cy="120" r="16" stroke="currentColor" stroke-opacity="0.3" />
+        <g class="orbit-point"><circle cx="120" cy="13" r="3" fill="currentColor" /></g>
+        <path d="M8 120h14m196 0h14M120 8v14m0 196v14" stroke="currentColor" stroke-opacity="0.5" />
+      </svg>
+      <div class="hero-focus"><p class="text-accent">01 — MACHINE LEARNING</p><p>02 — SYSTEMS DESIGN</p><p>03 — ENGINEERING</p></div>
+    </aside>
+  </section>
+  <About locale={locale} />
+  <section id="work" class="home-section" aria-labelledby="selected-title">
+    <div class="mb-8 flex flex-wrap items-end justify-between gap-4" data-reveal><div><p class="eyebrow">02 / {t.projects}</p><h2 id="selected-title" class="section-title mt-3">{t.selected}</h2></div><a href={`/${locale}/${sections[locale].projects}/`} class="text-sm text-accent">{t.all} ↗</a></div>
+    <div class="grid gap-5 md:grid-cols-2">{selected.map((entry, index) => <Card data={entry.data} kind="projects" index={index} />)}</div>
+    {!selected.length && <p class="text-muted">{t.empty}</p>}
+  </section>
+  <section class="home-section" aria-labelledby="notebook-title">
+    <div data-reveal><p class="eyebrow">03 / {t.posts}</p><h2 id="notebook-title" class="section-title mt-3 mb-8">{t.notebook}</h2></div>
+    <div class="grid gap-5 md:grid-cols-2">{posts.map((entry, index) => <Card data={entry.data} kind="posts" index={index} />)}</div>
+    {!posts.length && <p class="text-muted">{t.empty}</p>}
+  </section>
+  <Contact locale={locale} />
+</Base>

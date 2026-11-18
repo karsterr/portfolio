@@ -1,0 +1,31 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { text } from '../../../lib/site';
+import { entryPath, sections, kinds, type Kind } from '../../../../shared/content';
+export async function getStaticPaths() {
+  const groups = await Promise.all(kinds.map(async (kind) => (await getCollection(kind)).map((entry) => ({ params: { locale: entry.data.locale, section: sections[entry.data.locale][kind], slug: entry.data.slug }, props: { entry, kind } }))));
+  return groups.flat();
+}
+interface Props { entry: CollectionEntry<Kind>; kind: Kind; }
+const { entry, kind } = Astro.props;
+const data = entry.data;
+const t = text[data.locale];
+const { Content } = await render(entry);
+const translation = (await getCollection(kind)).find((item) => item.data.translationGroupId === data.translationGroupId && item.data.locale !== data.locale);
+---
+<Base locale={data.locale} title={data.title} description={data.summary} alternate={translation ? entryPath(translation.data, kind) : undefined}>
+  <article class="mx-auto max-w-4xl py-14 md:py-20">
+    <a href={`/${data.locale}/${sections[data.locale][kind]}/`} class="font-mono text-xs text-accent">← {t.back}</a>
+    <header class="mt-10 border-b border-line pb-10" data-reveal>
+      <p class="eyebrow">{t[kind]}{data.origin === 'babintech' ? ' / BABINTECH' : ''}</p>
+      <h1 class="mt-5 text-4xl font-semibold leading-tight tracking-tight md:text-6xl">{data.title}</h1>
+      <p class="mt-6 text-xl leading-9 text-muted">{data.summary}</p>
+      <div class="mt-6 flex flex-wrap gap-5 font-mono text-xs text-muted">{data.publishedAt && <time datetime={data.publishedAt}>{data.publishedAt}</time>}{data.role && <span>{data.role}</span>}{data.organization && <span>{data.organization}</span>}{data.period && <span>{data.period}</span>}</div>
+      <div class="mt-6 flex flex-wrap gap-2">{data.technologies.map((technology) => <span class="tag">{technology}</span>)}</div>
+      <div class="mt-6 flex gap-6 text-sm text-accent">{data.repositoryUrl && <a href={data.repositoryUrl}>{t.code} ↗</a>}{data.demoUrl && <a href={data.demoUrl}>{t.demo} ↗</a>}</div>
+    </header>
+    {data.cover && <img src={data.cover} alt="" class="mt-10 w-full" />}
+    <div class="prose mt-10"><Content /></div>
+  </article>
+</Base>

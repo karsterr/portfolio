@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" fill="none">
+  <path d="M58 10H89L29 69a9 9 0 0 0 0 12l60 59H58L5 87a17 17 0 0 1 0-24Z" fill="var(--brand-left, #285c70)"/>
+  <path d="M151 10h31l53 53a17 17 0 0 1 0 24l-53 53h-31l60-59a9 9 0 0 0 0-12Z" fill="var(--brand-right, #608b98)"/>
+  <path d="m94 47 39 24v12l-39 24V90l25-13-25-14Z" fill="var(--brand-ink, #e2d9da)"/>
+  <path d="M135 98h35v13h-35Z" fill="var(--brand-ink, #e2d9da)"/>
+</svg>

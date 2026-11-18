@@ -1,0 +1,7 @@
+---
+import HomePage from '../../components/HomePage.astro';
+import { locales, type Locale } from '../../../shared/content';
+export const getStaticPaths = () => locales.map((locale) => ({ params: { locale } }));
+const locale = Astro.params.locale as Locale;
+---
+<HomePage locale={locale} />
